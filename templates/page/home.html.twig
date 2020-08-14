@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home page!{% endblock %}
+
+{% block body %}
+    <p>
+        Vous etes dans le homepage
+    </p>
+    <section class="row">
+        <div class="col-lg-4">
+            {{form(form)}}
+        </div>
+        <div class="col-lg-6">
+            <form action="">
+               <div>
+                   <label for="nom">Nom</label>
+                   <input type="text" id="nom" placeholder="le nom du lieu">
+               </div>
+               <div>
+                    <label for="nom">Climat</label>
+                    <input type="text" id="climat" placeholder="le climat du lieu">
+                </div>
+                <div>
+                    <button type="submit" id="register">Enregistrer</button>
+                </div>
+            </form>
+            <div id="test">
+                
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Climat</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            $('tbody').load("{{asset('back/liste_lieu.php')}}");
+            $('#register').click(function(e){
+                e.preventDefault();
+                var nom  = $('#nom').val();
+                var climat = $('#climat').val();
+                //alert(nom+" "+climat);
+                var data = {
+                    "nom" : nom,
+                    "climat": climat
+                };
+                $.ajax({
+                    //url : "{{path('page.ajax.lieu')}}",
+                    url : "/page/ajax_lieu",
+                    type : "POST",
+                    data : data,
+                    success : function(retour) {
+                        //refreshList()
+                        var r = JSON.parse(retour['data']);
+                        //alert(r);
+                        if(r=="ok") {
+                            $('tbody').load("{{asset('back/liste_lieu.php')}}");
+                        }
+                        else {
+                            alert(r);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}
