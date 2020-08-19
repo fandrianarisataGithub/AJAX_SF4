@@ -1,0 +1,132 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <form action="" class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="">Matricule</label>
+                        <input type="text" class="form-control" id="matricule">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nom</label>
+                        <input type="text" class="form-control" id="nom">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Prénom</label>
+                        <input type="text" class="form-control" id="prenom">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="">Date de naissance</label>
+                        <input type="date" class="form-control" id="dn">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Sexe</label>
+                        <input type="text" class="form-control" id="sexe">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Classe</label>
+                        <input type="text" class="form-control" id="classe">
+                    </div>
+                </div>
+                <div class="form-group"><button id="register_etudiant" class="btn btn-primary form-control">Ajouter</button></div>
+            </form>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Matricule</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Date de naissance</th>
+                    <th>Sexe</th>
+                    <th>Classe</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tab_etudiant">
+               {% for row in liste %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.matricule }}</td>
+                    <td>{{ row.nom }}</td>
+                    <td>{{ row.prenom }}</td>
+                    <td>{{ row.getDateNaissance | date("j-m-Y") }}</td>
+                    <td>{{ row.sexe }}</td>
+                    <td>{{ row.classe }}</td>
+                    <td>
+                        <a href="#" class="modif_et" data-id = "{{ row.id }}"><span class="fa fa-edit"></span></a>
+                        <a href="#" class="suppr_et" data-id = "{{ row.id }}"><span class="fa fa-trash-o"></span></a>
+                    </td>
+                </tr>
+               {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock body %}
+{% block javascripts %}
+
+    <script>
+        $(document).ready(function(){
+            $('#register_etudiant').click(function(e){
+                e.preventDefault();
+                var matricule = $('#matricule').val();
+                var nom = $('#nom').val();
+                var prenom = $('#prenom').val();
+                var dn = $('#dn').val();
+                var sexe = $('#sexe').val();
+                var classe = $('#classe').val();
+                var data = {
+                    "matricule" : matricule,
+                    "nom" : nom,
+                    "prenom" : prenom,
+                    "dn" : dn,
+                    "sexe" : sexe,
+                    "classe" : classe
+                };
+                if(nom!="" && sexe!="" && classe!="") {
+                    $.ajax({
+                        url : "/page/ajax_list",
+                        type : "POST",
+                        data : data,
+                        success : function(response) {
+                            $('#tab_etudiant').html('');
+                            var string = "";
+                            if(response.length > 0){
+                                for(var i = response.length - 1; i>=0 ; i--) {
+                                    // on crée un tr
+                                    var d_tr = "<tr>";
+                                        d_tr += "<td>"+response[i]['id']+"</td>";
+                                        d_tr += "<td>"+response[i]['matricule']+"</td>";
+                                        d_tr += "<td>"+response[i]['nom']+"</td>";
+                                        d_tr += "<td>"+response[i]['prenom']+"</td>";
+                                        d_tr += "<td>"+response[i]['date_naissance']+"</td>";
+                                        d_tr += "<td>"+response[i]['sexe']+"</td>";
+                                        d_tr += "<td>"+response[i]['classe']+"</td>";
+                                        d_tr += '<td> <a href="#" data-id='+ response[i]['id'] +' class="edit_et"><span class="fa fa-edit"></span></a><a href="#" data-id='+ response[i]['id'] +' class="suppr_et"><span class="fa fa-trash-o"></span></a></tr>'
+                                        d_tr += "</tr>";
+                                    string += d_tr;
+                                }
+                                $('#tab_etudiant').append(string);
+
+                            }
+
+                        }
+                    })
+                }
+            })
+            // fonxtion pour les affichages
+            function refreshListe() {
+                console.log("nety")
+            }
+        })
+    </script>
+
+{% endblock %}

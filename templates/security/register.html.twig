@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
+    <style>
+        body{
+            background-color: rgb(12, 45, 44);
+            color: #fff;
+            padding-top: 100px;
+        }
+        nav.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 0;
+            width: 100%;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <h4 style="text-align:center;">Inscription</h4>
+                {{ form_start(form_admin) }}
+                   <div class="form-group">
+                    <label for="">Adresse email</label>
+                    {{ form_widget(form_admin.email) }}
+                   </div>
+                    <div class="form-group">
+                        <label for="">Mot de passe</label>
+                    {{ form_widget(form_admin.password) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Confirmer votre mot de passe</label>
+                    {{ form_widget(form_admin.c_password) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de l'administrateur</label>
+                    {{ form_widget(form_admin.type_admin) }}
+                    </div>
+                   <div class="form-group">
+                    {{ form_widget(form_admin.insert) }}
+                   </div>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+    </div>
+    <script src="{{asset('jquery/jquery.min.js')}}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

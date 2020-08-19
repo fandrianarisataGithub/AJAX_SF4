@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            {{form(form_p)}}
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+    <div class="row">
+        <article style="display: block;margin:25px auto auto 25px;">
+            <div class="titre"><h4>Titre</h4></div>
+            <div class="contenu">
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. E
+                    xcepturi, repudiandae aspernatur ullam, accusantium magnam blanditiis, 
+                    repellendus sed beatae id optio dignissimos dolor 
+                    eveniet? Aperiam asperiores distinctio autem quae ipsam ad.
+                </p>
+            </div>
+            <div class="image">
+                <img src="https://www.cjoint.com/doc/20_08/JHonLTKfMtf_index.jpg" class="img-responsive" alt="image">
+            </div>
+            <div class="createdAt">
+                date 
+            </div>
+            <div class="bouton">
+                <a href="#" class="btn btn-primary">Voir le contenu</a>
+            </div>
+        </article>
+    </div>
+{% endblock body %}
+{% block javascripts %}
+
+    <script>
+        
+    </script>
+
+{% endblock %}

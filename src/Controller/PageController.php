@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Lieu;
 use App\Form\LieuType;
+use App\Entity\Etudiant;
+use App\Entity\Publication;
+use App\Form\PublicationType;
 use Doctrine\ORM\EntityManager;
 use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,4 +81,89 @@ class PageController extends AbstractController
         return $this->render('page/home.html.twig');
 
     }
+
+    /**
+     * @Route("/page/ajout_image", name="page.ajout.file")
+     */
+    public function ajout_image() 
+    {   
+        // creating form
+        $pub = new Publication();
+        $form_p = $this->createForm(PublicationType::class, $pub);
+
+        return $this->render('page/ajout_image.html.twig',[
+            "form_p" =>$form_p->createView()
+        ]);
+    }
+     
+    /**
+     * @Route("/page/ajax_list", name="page.ajax.list")
+     */
+    public function do_ajax(Request $request, EntityManagerInterface $manager) 
+    {   
+        // alaina le requete
+        
+        if($request->isXmlHttpRequest()){
+            
+            $et = new Etudiant();
+            if($request->get('matricule')){
+                
+               $et->setMatricule($request->get('matricule'));
+                $et->setNom($request->get('nom'));
+                $et->setPrenom($request->get('prenom'));
+                $s = $request->get('dn');
+                //$date = \DateTime::createFromFormat("Y-M-d" ,$s);
+                //$external = "2020-06-25";
+                $format = "Y-m-d";
+                $dateobj = \DateTime::createFromFormat($format, $s);
+                $et->setDateNaissance($dateobj);
+                $et->setSexe($request->get('sexe'));
+                $et->setClasse($request->get('classe'));
+
+                $manager->persist($et);
+                $manager->flush(); 
+
+                // on récupère tous les etudiants
+                $tab_et = $this->getDoctrine()
+                ->getRepository(Etudiant::class)
+                ->findAll();
+                // on stock ces data dans u tableau 
+                $tab = array();
+                //var d incrementation pour lister les data
+                $i = 0;
+                foreach($tab_et as $t){
+                    $tab[$i]['id'] = $t->getId();
+                    $tab[$i]['matricule'] = $t->getMatricule();
+                    $tab[$i]['nom'] = $t->getNom();
+                    $tab[$i]['prenom'] = $t->getPrenom();
+                    $tab[$i]['date_naissance'] = $t->getDateNaissance()->format('d-m-Y');;
+                    $tab[$i]['sexe'] = $t->getSexe();
+                    $tab[$i]['classe'] = $t->getClasse();
+
+                    $i++;
+                }
+
+                $response = new Response();
+
+                    $data = json_encode($tab); // formater le résultat de la requête en json
+
+                    $response->headers->set('Content-Type', 'application/json');
+                    $response->setContent($data);
+
+                    return $response;
+                
+               //return new JsonResponse(array("data" => json_encode("ok")));
+            }
+            
+        }
+        $liste_et = $this->getDoctrine()
+                            ->getRepository(Etudiant::class)
+                            ->findAllEt();
+        return $this->render('page/do_ajax.html.twig' , [
+            "liste" =>$liste_et
+        ]);
+        
+    }
+
+   
 }
