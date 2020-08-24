@@ -25,7 +25,11 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                {% if pass %}
+                    <p>{{ pass }}</p>
+                {% endif %}
+            </div>
             <div class="col-lg-4">
                 <h4 style="text-align:center;">Inscription</h4>
                 {{ form_start(form_admin) }}
@@ -34,8 +38,8 @@
                     {{ form_widget(form_admin.email) }}
                    </div>
                     <div class="form-group">
+                        {{ form_widget(form_admin.password) }}
                         <label for="">Mot de passe</label>
-                    {{ form_widget(form_admin.password) }}
                     </div>
                     <div class="form-group">
                         <label for="">Confirmer votre mot de passe</label>
